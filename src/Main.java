@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -26,7 +27,7 @@ public class Main {
                     8. Zakoncz program\s
                     """);
         while(true){
-
+            System.out.print("Twój wybór: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice){
@@ -35,6 +36,34 @@ public class Main {
                 case 2:
                     break;
                 case 3:
+                    int categoryId, productId;
+                    shoppingList.printAllCategories();
+                    while (true){
+                        try{
+                            System.out.print("Twój wybór: ");
+                            categoryId = scanner.nextInt();
+                            break;
+                        }
+                        catch (InputMismatchException e) {
+                            System.out.println("Nie podano liczby!");
+                            scanner.nextLine();
+                        }
+                    }
+
+                    shoppingList.printCategoryList(shoppingList.findCategory(categoryId));
+                    while (true){
+                        try{
+                            System.out.print("Twój wybór: ");
+                            productId = scanner.nextInt();
+                            break;
+                        }
+                        catch (InputMismatchException e) {
+                            System.out.println("Nie podano liczby!");
+                            scanner.nextLine();
+                        }
+                    }
+
+                    shoppingList.addItem(categoryId,productId);
                     break;
                 case 4:
                     break;
@@ -50,17 +79,9 @@ public class Main {
                     System.out.println("Nie ma takiej opcji!");
                     break;
             }
+            if(choice == 8)
+                break;
+
         }
-
-//        shoppingList.printShoppingList();
-//        //shoppingList.printCategoryList("Motoryzacja");
-//
-//        shoppingList.deleteProductsFromCategory(2);
-//        shoppingList.printShoppingList();
-//        shoppingList.deleteSpecificProduct(1,1);
-//        shoppingList.printShoppingList();
-
-
-
     }
 }

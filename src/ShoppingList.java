@@ -35,15 +35,46 @@ public class ShoppingList {
         }
     }
 
-    public void addItem(int category, int product){
-        int i = 0;
+    public String findCategory(int category){
         String categoryName = null;
+        int i = 1;
         for (Map.Entry<String, List<String>> entry : shoppingList.entrySet()){
             if(i == category){
                 categoryName = entry.getKey();
+                break;
             }
             ++i;
         }
+        return categoryName;
+    }
+    public String findProduct(String category, int product){
+        String productName = null;
+        int i = 1;
+        List<String> products = shoppingList.get(category);
+        for (String produc : products){
+            if(i == product){
+                productName = produc;
+                break;
+            }
+        }
+        return productName;
+    }
+    public void addItem(int category, int product){
+
+        String categoryName = findCategory(category);
+        String productName = findProduct(categoryName, product);
+
+        /*Dodanie przedmiotu jak kategoria istnieje*/
+        if (categoryName == null) {
+            throw new IllegalArgumentException("Nieprawidłowa kategoria!");
+        }
+        else if(productName == null){
+            throw new IllegalArgumentException("Nieprawidłowy produkt!");
+        }
+
+        List<String> productList = clientShoppingList.computeIfAbsent(categoryName, k -> new ArrayList<>());
+
+        productList.add(productName);
 
     }
 
@@ -59,24 +90,24 @@ public class ShoppingList {
     }
 
     public void printCategoryList(String category){
-        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
-            if(entry.getKey().equals(category)) {
-                List<String> products = entry.getValue();
-                int i = 1;
-                for (String product : products){
-                    System.out.println(i + ". " + product);
-                }
-                break;
-            }
+        if(category == null){
+            throw new NullPointerException("Kategoria nie istnieje!");
+        }
+        int i=1;
+        List<String> productList = shoppingList.get(category);
+        for (String product : productList){
+            System.out.println(i + ". " + product);
+            ++i;
         }
         System.out.print("\n");
     }
 
     public void printAllCategories(){
         int i = 1;
-        System.out.println("Dostepne kategorie:");
+        System.out.println("Podaj id kategorii:");
         for (Map.Entry<String, List<String>> entry : shoppingList.entrySet() ){
             System.out.println(i+". " + entry.getKey());
+            ++i;
         }
         System.out.print("\n");
     }
