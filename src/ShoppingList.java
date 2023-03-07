@@ -59,10 +59,7 @@ public class ShoppingList {
         }
         return productName;
     }
-    public void addItem(int category, int product){
-
-        String categoryName = findCategory(category);
-        String productName = findProduct(categoryName, product);
+    public void addItem(String categoryName, String productName){
 
         /*Dodanie przedmiotu jak kategoria istnieje*/
         if (categoryName == null) {

@@ -15,7 +15,8 @@ public class Main {
         }
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("""
+        while(true){
+            System.out.println("""
                     Co chcesz zrobić:
                     1. Wyswietl wszystkie produkty.
                     2. Wyswietl produkty z danej kategorii.
@@ -26,8 +27,7 @@ public class Main {
                     7. Zapisz moja liste zakupow
                     8. Zakoncz program\s
                     """);
-        while(true){
-            System.out.print("Twój wybór: ");
+            System.out.print("Co chcesz zrobić: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice){
@@ -38,19 +38,25 @@ public class Main {
                 case 3:
                     int categoryId, productId;
                     shoppingList.printAllCategories();
+                    String category = null;
                     while (true){
                         try{
                             System.out.print("Twój wybór: ");
                             categoryId = scanner.nextInt();
+                            category = shoppingList.findCategory(categoryId);
+                            shoppingList.printCategoryList(category);
                             break;
                         }
                         catch (InputMismatchException e) {
                             System.out.println("Nie podano liczby!");
                             scanner.nextLine();
                         }
+                        catch (NullPointerException e){
+                            System.out.println(e.getMessage());
+                            scanner.nextLine();
+                        }
                     }
 
-                    shoppingList.printCategoryList(shoppingList.findCategory(categoryId));
                     while (true){
                         try{
                             System.out.print("Twój wybór: ");
@@ -62,8 +68,11 @@ public class Main {
                             scanner.nextLine();
                         }
                     }
-
-                    shoppingList.addItem(categoryId,productId);
+                    try{
+                        shoppingList.addItem(category, shoppingList.findProduct(category, productId));
+                    }catch (IllegalArgumentException e){
+                        System.out.println(e.getMessage() + " Nie dodano przedmiotu.");
+                    }
                     break;
                 case 4:
                     break;
