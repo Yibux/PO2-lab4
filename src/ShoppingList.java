@@ -1,5 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -12,6 +14,30 @@ public class ShoppingList {
         clientShoppingList = new LinkedHashMap<>();
     }
 
+    public void loadPreviousList() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new FileReader("Moja lista.txt"));
+        String line;
+        String category = null;
+        List<String> products = new ArrayList<>();
+        while(scanner.hasNextLine()){
+            line = scanner.nextLine();
+            if(line.isBlank())
+                continue;
+            else if(line.charAt(0) != ' '){
+                if(category != null) {
+                    clientShoppingList.put(category,products);
+                }
+                category = line;
+                products = new ArrayList<>();
+            }
+            else{
+                products.add(line.trim());
+            }
+        }
+        if(category != null) {
+            clientShoppingList.put(category,products);
+        }
+    }
     public void loadList() throws FileNotFoundException {
         Scanner scanner = new Scanner(new FileReader("lista.txt"));
         String line;
@@ -33,6 +59,7 @@ public class ShoppingList {
         if(category != null) {
             shoppingList.put(category,products);
         }
+        scanner.close();
     }
 
     public String findCategory(int category){
@@ -147,21 +174,17 @@ public class ShoppingList {
     }
 
     public void deleteAllProducts(){
-        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
-            entry.getValue().clear();
-        }
+        if(clientShoppingList.isEmpty())
+            throw new NullPointerException();
         clientShoppingList.clear();
     }
 
-    public void deleteProductsFromCategory(int category){
-        int i = 0;
-        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
-            if(i == category){
-                entry.getValue().clear();
-                break;
-            }
-            ++i;
+    public void deleteProductsFromCategory(String category){
+        if (category == null) {
+            throw new IllegalArgumentException("Nieprawidłowa kategoria!");
         }
+        clientShoppingList.get(category).clear();
+        clientShoppingList.remove(category);
     }
 
     public void deleteSpecificProduct(String category, int product){
@@ -176,6 +199,17 @@ public class ShoppingList {
         products.remove(product-1);
         if(products.size() == 0)
             clientShoppingList.remove(category);
+    }
+    public void saveMyList() throws IOException{
+        FileWriter writer = new FileWriter("Moja lista.txt", false);
+        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
+            writer.write("\n" + entry.getKey());
+            List<String> products = entry.getValue();
+            for (String product : products){
+                writer.write("\n    " + product);
+            }
+        }
+        writer.close();
     }
 
 }

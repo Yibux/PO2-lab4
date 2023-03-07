@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.EmptyStackException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -7,13 +8,18 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         ShoppingList shoppingList = new ShoppingList();
-        shoppingList.addItem("Chemia","Mydlo");
         try{
             shoppingList.loadList();
         }
         catch (FileNotFoundException e){
             System.out.println("Plik nie istnieje!");
             System.exit(1);
+        }
+
+        try{
+            shoppingList.loadPreviousList();
+        } catch (FileNotFoundException e){
+            //do nothing
         }
 
         Scanner scanner = new Scanner(System.in);
@@ -24,9 +30,9 @@ public class Main {
                     1. Wyswietl wszystkie produkty.
                     2. Wyswietl produkty z danej kategorii.
                     3. Dodaj produkt
-                    4. Usun produkt
-                    5. Usun kategorie
-                    6. Usun produkty z danej kategorii
+                    4. Usuń produkt
+                    5. Usuń kategorię i produkty
+                    6. Usuń wszystkie produkty i kategorie
                     7. Zapisz moja liste zakupow
                     8. Zakoncz program\s
                     """);
@@ -42,8 +48,6 @@ public class Main {
                     scanner.nextLine();
                 }
             }
-
-            //scanner.nextLine();
 
             switch (choice){
                 case 1:
@@ -156,10 +160,50 @@ public class Main {
                     }
                     break;
                 case 5:
+                    try{
+                        shoppingList.printClientCategories();
+                    } catch (EmptyStackException e){
+                        System.out.println("\nLista jest pusta!\n");
+                        break;
+                    }
+                    category = null;
+                    while (true){
+                        try{
+                            System.out.print("Twój wybór: ");
+                            categoryId = scanner.nextInt();
+                            category = shoppingList.findClientCategory(categoryId);
+                            shoppingList.deleteProductsFromCategory(category);
+                            break;
+                        }
+                        catch (InputMismatchException e) {
+                            System.out.println("Nie podano liczby!");
+                            scanner.nextLine();
+                        }
+                        catch (NullPointerException e){
+                            System.out.println("Kategoria nie istnieje!");
+                            scanner.nextLine();
+                        }
+                        catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+                            System.out.println(e.getMessage() + " Nie usunieto przedmiotów.");
+                        }
+                    }
+
                     break;
                 case 6:
+                    try{
+                        shoppingList.deleteAllProducts();
+                    } catch (NullPointerException e){
+                        System.out.println("\nLista jest pusta!\n");
+                    }
                     break;
                 case 7:
+                    try {
+                        shoppingList.saveMyList();
+                        System.out.println("Zapisano!\n");
+                    } catch (IOException e){
+                        System.out.println("Wystąpił błąd podczas zapisywania danych do pliku.");
+                        e.printStackTrace();
+                    }
                     break;
                 case 8:
                     break;
