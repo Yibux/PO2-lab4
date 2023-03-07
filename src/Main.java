@@ -11,5 +11,6 @@ public class Main {
             System.out.println("Plik nie istnieje!");
             System.exit(1);
         }
+        shpopingList.printShoppingList();
     }
 }

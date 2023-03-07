@@ -33,4 +33,14 @@ public class ShoppingList {
         }
     }
 
+    public void printShoppingList(){
+        for (Map.Entry<String, List<String>> entry : shoppingList.entrySet() ){
+            System.out.println("Kategoria: " + entry.getKey());
+            List<String> products = entry.getValue();
+            for (String product : products){
+                System.out.println("- " + product);
+            }
+        }
+    }
+
 }
