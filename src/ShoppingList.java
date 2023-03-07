@@ -47,16 +47,23 @@ public class ShoppingList {
         }
         return categoryName;
     }
+    public String findClientCategory(int category){
+        String categoryName = null;
+        int i = 1;
+        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet()){
+            if(i == category){
+                categoryName = entry.getKey();
+                break;
+            }
+            ++i;
+        }
+        return categoryName;
+    }
     public String findProduct(String category, int product){
         String productName = null;
         int i = 1;
         List<String> products = shoppingList.get(category);
-        for (String produc : products){
-            if(i == product){
-                productName = produc;
-                break;
-            }
-        }
+        productName = products.get(product-1);
         return productName;
     }
     public void addItem(String categoryName, String productName){
@@ -75,7 +82,10 @@ public class ShoppingList {
 
     }
 
-    public void printShoppingList() throws EmptyStackException{
+    public void printShoppingList(){
+        if(clientShoppingList.isEmpty()) {
+            throw new EmptyStackException();
+        }
         for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
             System.out.println("Kategoria: " + entry.getKey());
             List<String> products = entry.getValue();
@@ -91,7 +101,21 @@ public class ShoppingList {
             throw new NullPointerException("Kategoria nie istnieje!");
         }
         int i=1;
+        System.out.println("Wybierz id produktu: ");
         List<String> productList = shoppingList.get(category);
+        for (String product : productList){
+            System.out.println(i + ". " + product);
+            ++i;
+        }
+        System.out.print("\n");
+    }
+    public void printClientCategoryList(String category){
+        if(category == null){
+            throw new NullPointerException("Kategoria nie istnieje!");
+        }
+        int i=1;
+        System.out.println("Wybierz id produktu: ");
+        List<String> productList = clientShoppingList.get(category);
         for (String product : productList){
             System.out.println(i + ". " + product);
             ++i;
@@ -103,6 +127,19 @@ public class ShoppingList {
         int i = 1;
         System.out.println("Podaj id kategorii:");
         for (Map.Entry<String, List<String>> entry : shoppingList.entrySet() ){
+            System.out.println(i+". " + entry.getKey());
+            ++i;
+        }
+        System.out.print("\n");
+    }
+
+    public void printClientCategories(){
+        if(clientShoppingList.isEmpty()) {
+            throw new EmptyStackException();
+        }
+        int i = 1;
+        System.out.println("Podaj id kategorii:");
+        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
             System.out.println(i+". " + entry.getKey());
             ++i;
         }
@@ -127,15 +164,18 @@ public class ShoppingList {
         }
     }
 
-    public void deleteSpecificProduct(int category, int product){
-        int i = 0;
-        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
-            if(i == category){
-                 entry.getValue().remove(product);
-                 break;
-            }
-            ++i;
+    public void deleteSpecificProduct(String category, int product){
+        if (category == null) {
+            throw new IllegalArgumentException("Nieprawidłowa kategoria!");
         }
+
+        List<String> products = clientShoppingList.get(category);
+        if(product - 1 > products.size()){
+            throw new IndexOutOfBoundsException("Podano nieprawidłowy indeks!");
+        }
+        products.remove(product-1);
+        if(products.size() == 0)
+            clientShoppingList.remove(category);
     }
 
 }
