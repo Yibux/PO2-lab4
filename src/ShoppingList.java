@@ -5,9 +5,11 @@ import java.util.*;
 
 public class ShoppingList {
     LinkedHashMap<String, List<String>> shoppingList;
+    LinkedHashMap<String, List<String>> clientShoppingList;
 
     public ShoppingList(){
         shoppingList = new LinkedHashMap<>();
+        clientShoppingList = new LinkedHashMap<>();
     }
 
     public void loadList() throws FileNotFoundException {
@@ -33,8 +35,20 @@ public class ShoppingList {
         }
     }
 
-    public void printShoppingList(){
-        for (Map.Entry<String, List<String>> entry : shoppingList.entrySet() ){
+    public void addItem(int category, int product){
+        int i = 0;
+        String categoryName = null;
+        for (Map.Entry<String, List<String>> entry : shoppingList.entrySet()){
+            if(i == category){
+                categoryName = entry.getKey();
+            }
+            ++i;
+        }
+
+    }
+
+    public void printShoppingList() throws EmptyStackException{
+        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
             System.out.println("Kategoria: " + entry.getKey());
             List<String> products = entry.getValue();
             for (String product : products){
@@ -45,7 +59,7 @@ public class ShoppingList {
     }
 
     public void printCategoryList(String category){
-        for (Map.Entry<String, List<String>> entry : shoppingList.entrySet() ){
+        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
             if(entry.getKey().equals(category)) {
                 List<String> products = entry.getValue();
                 int i = 1;
@@ -68,15 +82,15 @@ public class ShoppingList {
     }
 
     public void deleteAllProducts(){
-        for (Map.Entry<String, List<String>> entry : shoppingList.entrySet() ){
+        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
             entry.getValue().clear();
         }
-        shoppingList.clear();
+        clientShoppingList.clear();
     }
 
     public void deleteProductsFromCategory(int category){
         int i = 0;
-        for (Map.Entry<String, List<String>> entry : shoppingList.entrySet() ){
+        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
             if(i == category){
                 entry.getValue().clear();
                 break;
@@ -87,7 +101,7 @@ public class ShoppingList {
 
     public void deleteSpecificProduct(int category, int product){
         int i = 0;
-        for (Map.Entry<String, List<String>> entry : shoppingList.entrySet() ){
+        for (Map.Entry<String, List<String>> entry : clientShoppingList.entrySet() ){
             if(i == category){
                  entry.getValue().remove(product);
                  break;
