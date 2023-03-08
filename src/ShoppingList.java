@@ -37,6 +37,7 @@ public class ShoppingList {
         if(category != null) {
             clientShoppingList.put(category,products);
         }
+        scanner.close();
     }
     public void loadList() throws FileNotFoundException {
         Scanner scanner = new Scanner(new FileReader("lista.txt"));
