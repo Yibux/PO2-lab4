@@ -68,7 +68,7 @@ public class Main {
                         try{
                             System.out.print("Twój wybór: ");
                             categoryId = scanner.nextInt();
-                            shoppingList.printClientCategoryList(shoppingList.findCategory(categoryId));
+                            shoppingList.printClientCategoryList(shoppingList.findClientCategory(categoryId));
                             break;
                         }
                         catch (InputMismatchException e) {
@@ -76,7 +76,7 @@ public class Main {
                             scanner.nextLine();
                         }
                         catch (NullPointerException e){
-                            System.out.println(e.getMessage());
+                            System.out.println("Lista jest pusta");
                             scanner.nextLine();
                         }
                     }

@@ -142,7 +142,7 @@ public class ShoppingList {
             throw new NullPointerException("Kategoria nie istnieje!");
         }
         int i=1;
-        System.out.println("Wybierz id produktu: ");
+        System.out.println("Produkty:");
         List<String> productList = clientShoppingList.get(category);
         for (String product : productList){
             System.out.println(i + ". " + product);
